@@ -5,6 +5,7 @@ import ReportTable from '../components/ReportTable';
 import EmptyState from '../components/EmptyState';
 import { getOrdersInRange, getSalesInRange } from '../data/mockData';
 import { generatePDF } from '../services/pdfGenerator';
+import { generateCSV } from '../services/csvPapaparse';
 
 export default function ReportsPage() {
   const [data, setData] = useState(null);
@@ -25,6 +26,10 @@ export default function ReportsPage() {
       generatePDF({ data, ...filters });
       setGenerating(false);
     }, 500);
+  };
+
+  const handleDownloadCSV = () => {
+    generateCSV({ data, ...filters });
   };
 
   const hasData = data !== null;
@@ -57,13 +62,19 @@ export default function ReportsPage() {
 
           <ReportTable data={data} reportType={filters.reportType} />
 
-          <div className="flex justify-end mt-4">
+          <div className="flex justify-end gap-3 mt-4">
             <button
               onClick={handleDownload}
               disabled={generating}
               className="flex items-center gap-2 px-5 py-2 bg-[#16213e] text-white rounded-lg text-sm font-medium hover:bg-[#1a2a4a] transition-colors disabled:opacity-50"
             >
               {generating ? 'Generando...' : 'Descargar PDF'}
+            </button>
+            <button
+              onClick={handleDownloadCSV}
+              className="flex items-center gap-2 px-5 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
+            >
+              Descargar CSV
             </button>
           </div>
         </>
