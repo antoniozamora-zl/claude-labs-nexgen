@@ -5,7 +5,7 @@ import ReportTable from '../components/ReportTable';
 import EmptyState from '../components/EmptyState';
 import { getOrdersInRange, getSalesInRange } from '../data/mockData';
 import { generatePDF } from '../services/pdfGenerator';
-import { generateCSV } from '../services/csvPapaparse';
+import { generateCSV } from '../services/csvGenerator';
 
 export default function ReportsPage() {
   const [data, setData] = useState(null);
@@ -20,7 +20,7 @@ export default function ReportsPage() {
     setFilters({ reportType, startDate, endDate });
   };
 
-  const handleDownload = () => {
+  const handleDownloadPDF = () => {
     setGenerating(true);
     setTimeout(() => {
       generatePDF({ data, ...filters });
@@ -64,17 +64,17 @@ export default function ReportsPage() {
 
           <div className="flex justify-end gap-3 mt-4">
             <button
-              onClick={handleDownload}
+              onClick={handleDownloadCSV}
+              className="flex items-center gap-2 px-5 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors"
+            >
+              Descargar CSV
+            </button>
+            <button
+              onClick={handleDownloadPDF}
               disabled={generating}
               className="flex items-center gap-2 px-5 py-2 bg-[#16213e] text-white rounded-lg text-sm font-medium hover:bg-[#1a2a4a] transition-colors disabled:opacity-50"
             >
               {generating ? 'Generando...' : 'Descargar PDF'}
-            </button>
-            <button
-              onClick={handleDownloadCSV}
-              className="flex items-center gap-2 px-5 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
-            >
-              Descargar CSV
             </button>
           </div>
         </>
