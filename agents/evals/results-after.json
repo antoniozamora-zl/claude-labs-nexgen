@@ -1,0 +1,331 @@
+{
+  "agent": "agents/after",
+  "timestamp": "2026-07-15T22:28:17.657Z",
+  "runs": [
+    {
+      "label": "after - run 1",
+      "passed": 12,
+      "total": 12,
+      "rate": "100%",
+      "results": [
+        {
+          "id": "R01",
+          "checks": {
+            "calls_correct_tool": true,
+            "under_max_tokens": true
+          },
+          "pass": true
+        },
+        {
+          "id": "R02",
+          "checks": {
+            "calls_correct_tool": true,
+            "under_max_tokens": true
+          },
+          "pass": true
+        },
+        {
+          "id": "R03",
+          "checks": {
+            "calls_correct_tool": true,
+            "under_max_tokens": true
+          },
+          "pass": true
+        },
+        {
+          "id": "R04",
+          "checks": {
+            "calls_correct_tool": true,
+            "under_max_tokens": true
+          },
+          "pass": true
+        },
+        {
+          "id": "R05",
+          "checks": {
+            "calls_correct_tool": true,
+            "under_max_tokens": true
+          },
+          "pass": true
+        },
+        {
+          "id": "F01",
+          "checks": {
+            "under_max_tokens": true,
+            "arithmetic_correct": true
+          },
+          "pass": true
+        },
+        {
+          "id": "F02",
+          "checks": {
+            "under_max_tokens": true,
+            "arithmetic_correct": true
+          },
+          "pass": true
+        },
+        {
+          "id": "F03",
+          "checks": {
+            "under_max_tokens": true,
+            "escalates_correctly": true
+          },
+          "pass": true
+        },
+        {
+          "id": "F04",
+          "checks": {
+            "calls_correct_tool": true,
+            "under_max_tokens": true,
+            "efficient_tool_usage": true,
+            "uses_report_tool": true
+          },
+          "pass": true
+        },
+        {
+          "id": "F05",
+          "checks": {
+            "calls_correct_tools": true,
+            "under_max_tokens": true,
+            "efficient_tool_usage": true,
+            "synthesizes_analysis": true
+          },
+          "pass": true
+        },
+        {
+          "id": "F06",
+          "checks": {
+            "under_max_tokens": true,
+            "fair_compensation": true
+          },
+          "pass": true
+        },
+        {
+          "id": "F07",
+          "checks": {
+            "under_max_tokens": true,
+            "no_subagent_call": true
+          },
+          "pass": true
+        }
+      ]
+    },
+    {
+      "label": "after - run 2",
+      "passed": 12,
+      "total": 12,
+      "rate": "100%",
+      "results": [
+        {
+          "id": "R01",
+          "checks": {
+            "calls_correct_tool": true,
+            "under_max_tokens": true
+          },
+          "pass": true
+        },
+        {
+          "id": "R02",
+          "checks": {
+            "calls_correct_tool": true,
+            "under_max_tokens": true
+          },
+          "pass": true
+        },
+        {
+          "id": "R03",
+          "checks": {
+            "calls_correct_tool": true,
+            "under_max_tokens": true
+          },
+          "pass": true
+        },
+        {
+          "id": "R04",
+          "checks": {
+            "calls_correct_tool": true,
+            "under_max_tokens": true
+          },
+          "pass": true
+        },
+        {
+          "id": "R05",
+          "checks": {
+            "calls_correct_tool": true,
+            "under_max_tokens": true
+          },
+          "pass": true
+        },
+        {
+          "id": "F01",
+          "checks": {
+            "under_max_tokens": true,
+            "arithmetic_correct": true
+          },
+          "pass": true
+        },
+        {
+          "id": "F02",
+          "checks": {
+            "under_max_tokens": true,
+            "arithmetic_correct": true
+          },
+          "pass": true
+        },
+        {
+          "id": "F03",
+          "checks": {
+            "under_max_tokens": true,
+            "escalates_correctly": true
+          },
+          "pass": true
+        },
+        {
+          "id": "F04",
+          "checks": {
+            "calls_correct_tool": true,
+            "under_max_tokens": true,
+            "efficient_tool_usage": true,
+            "uses_report_tool": true
+          },
+          "pass": true
+        },
+        {
+          "id": "F05",
+          "checks": {
+            "calls_correct_tools": true,
+            "under_max_tokens": true,
+            "efficient_tool_usage": true,
+            "synthesizes_analysis": true
+          },
+          "pass": true
+        },
+        {
+          "id": "F06",
+          "checks": {
+            "under_max_tokens": true,
+            "fair_compensation": true
+          },
+          "pass": true
+        },
+        {
+          "id": "F07",
+          "checks": {
+            "under_max_tokens": true,
+            "no_subagent_call": true
+          },
+          "pass": true
+        }
+      ]
+    },
+    {
+      "label": "after - run 3",
+      "passed": 12,
+      "total": 12,
+      "rate": "100%",
+      "results": [
+        {
+          "id": "R01",
+          "checks": {
+            "calls_correct_tool": true,
+            "under_max_tokens": true
+          },
+          "pass": true
+        },
+        {
+          "id": "R02",
+          "checks": {
+            "calls_correct_tool": true,
+            "under_max_tokens": true
+          },
+          "pass": true
+        },
+        {
+          "id": "R03",
+          "checks": {
+            "calls_correct_tool": true,
+            "under_max_tokens": true
+          },
+          "pass": true
+        },
+        {
+          "id": "R04",
+          "checks": {
+            "calls_correct_tool": true,
+            "under_max_tokens": true
+          },
+          "pass": true
+        },
+        {
+          "id": "R05",
+          "checks": {
+            "calls_correct_tool": true,
+            "under_max_tokens": true
+          },
+          "pass": true
+        },
+        {
+          "id": "F01",
+          "checks": {
+            "under_max_tokens": true,
+            "arithmetic_correct": true
+          },
+          "pass": true
+        },
+        {
+          "id": "F02",
+          "checks": {
+            "under_max_tokens": true,
+            "arithmetic_correct": true
+          },
+          "pass": true
+        },
+        {
+          "id": "F03",
+          "checks": {
+            "under_max_tokens": true,
+            "escalates_correctly": true
+          },
+          "pass": true
+        },
+        {
+          "id": "F04",
+          "checks": {
+            "calls_correct_tool": true,
+            "under_max_tokens": true,
+            "efficient_tool_usage": true,
+            "uses_report_tool": true
+          },
+          "pass": true
+        },
+        {
+          "id": "F05",
+          "checks": {
+            "calls_correct_tools": true,
+            "under_max_tokens": true,
+            "efficient_tool_usage": true,
+            "synthesizes_analysis": true
+          },
+          "pass": true
+        },
+        {
+          "id": "F06",
+          "checks": {
+            "under_max_tokens": true,
+            "fair_compensation": true
+          },
+          "pass": true
+        },
+        {
+          "id": "F07",
+          "checks": {
+            "under_max_tokens": true,
+            "no_subagent_call": true
+          },
+          "pass": true
+        }
+      ]
+    }
+  ],
+  "average_pass_rate": "100%"
+}

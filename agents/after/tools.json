@@ -1,0 +1,14 @@
+[
+  {"name": "lookup_order", "description": "Look up order by ID", "parameters": {"order_id": "string"}},
+  {"name": "search_orders", "description": "Search orders by criteria", "parameters": {"start_date": "string", "end_date": "string", "customer": "string", "status": "string"}},
+  {"name": "check_inventory", "description": "Check stock level for an ingredient", "parameters": {"ingredient": "string"}},
+  {"name": "get_employee_schedule", "description": "Get employee schedule for a period", "parameters": {"employee_id": "string", "week": "string"}},
+  {"name": "calculate_payroll", "description": "Calculate payroll with LFT rules", "parameters": {"employee_id": "string", "period": "string"}},
+  {"name": "generate_revenue_report", "description": "Generate revenue report for a date range", "parameters": {"start_date": "string", "end_date": "string"}},
+  {"name": "get_menu", "description": "Get current menu with prices and ingredients", "parameters": {}},
+  {"name": "calculate_dish_cost", "description": "Calculate preparation cost for a dish including waste factor", "parameters": {"dish": "string"}},
+  {"name": "log_complaint", "description": "Log a customer complaint with severity", "parameters": {"order_id": "string", "category": "string", "description": "string", "severity": "string"}},
+  {"name": "calculate", "description": "Evaluate an arithmetic expression and return the result", "parameters": {"expression": "string"}},
+  {"name": "search_data", "description": "Query EasyOrder data by entity type and filters", "parameters": {"entity": "string", "filters": "object"}},
+  {"name": "format_report", "description": "Format structured data into a table or report", "parameters": {"data": "array", "format": "string", "title": "string"}}
+]
