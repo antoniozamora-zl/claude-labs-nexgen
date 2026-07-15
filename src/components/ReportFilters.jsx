@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { validateDateRange } from '../utils/dateValidation';
 
 export default function ReportFilters({ onGenerate }) {
   const today = new Date();
@@ -7,49 +8,63 @@ export default function ReportFilters({ onGenerate }) {
   const [reportType, setReportType] = useState('ordenes');
   const [startDate, setStartDate] = useState(firstOfMonth.toISOString().split('T')[0]);
   const [endDate, setEndDate] = useState(today.toISOString().split('T')[0]);
+  const [error, setError] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const validation = validateDateRange(startDate, endDate);
+    if (!validation.valid) {
+      setError(validation.error);
+      return;
+    }
+    setError(null);
     onGenerate({ reportType, startDate, endDate });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-wrap items-end gap-4 mb-6">
-      <div className="flex flex-col gap-1">
-        <label className="text-sm text-gray-500 font-medium">Tipo de reporte</label>
-        <select
-          value={reportType}
-          onChange={(e) => setReportType(e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white"
+    <div className="mb-6">
+      <form onSubmit={handleSubmit} className="flex flex-wrap items-end gap-4">
+        <div className="flex flex-col gap-1">
+          <label className="text-sm text-gray-500 font-medium">Tipo de reporte</label>
+          <select
+            value={reportType}
+            onChange={(e) => setReportType(e.target.value)}
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white"
+          >
+            <option value="ordenes">Ordenes</option>
+            <option value="ventas">Ventas</option>
+          </select>
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-sm text-gray-500 font-medium">Fecha inicio</label>
+          <input
+            type="date"
+            value={startDate}
+            onChange={(e) => { setStartDate(e.target.value); setError(null); }}
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-sm text-gray-500 font-medium">Fecha fin</label>
+          <input
+            type="date"
+            value={endDate}
+            onChange={(e) => { setEndDate(e.target.value); setError(null); }}
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+          />
+        </div>
+        <button
+          type="submit"
+          className="px-5 py-2 bg-[#e94560] text-white rounded-lg text-sm font-medium hover:bg-[#d63850] transition-colors"
         >
-          <option value="ordenes">Ordenes</option>
-          <option value="ventas">Ventas</option>
-        </select>
-      </div>
-      <div className="flex flex-col gap-1">
-        <label className="text-sm text-gray-500 font-medium">Fecha inicio</label>
-        <input
-          type="date"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
-        />
-      </div>
-      <div className="flex flex-col gap-1">
-        <label className="text-sm text-gray-500 font-medium">Fecha fin</label>
-        <input
-          type="date"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
-        />
-      </div>
-      <button
-        type="submit"
-        className="px-5 py-2 bg-[#e94560] text-white rounded-lg text-sm font-medium hover:bg-[#d63850] transition-colors"
-      >
-        Generar preview
-      </button>
-    </form>
+          Generar preview
+        </button>
+      </form>
+      {error && (
+        <div className="mt-2 text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg">
+          {error}
+        </div>
+      )}
+    </div>
   );
 }
