@@ -1,8 +1,11 @@
 import { render, screen } from '@testing-library/react';
-import App from './App';
+import ReportsPage from './pages/ReportsPage';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+test('renders reports page with heading and filters', () => {
+  render(<ReportsPage />);
+  expect(screen.getByText('Reportes')).toBeInTheDocument();
+  expect(screen.getByText('Generar preview')).toBeInTheDocument();
+  expect(screen.getByText('Tipo de reporte')).toBeInTheDocument();
+  expect(screen.getByText('Fecha inicio')).toBeInTheDocument();
+  expect(screen.getByText('Fecha fin')).toBeInTheDocument();
 });
