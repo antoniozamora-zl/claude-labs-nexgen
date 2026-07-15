@@ -1,0 +1,118 @@
+[
+  {
+    "id": "control-01",
+    "type": "control",
+    "description": "Basic question about how to add a menu item",
+    "input": "Hola, acabo de empezar con EasyOrder. ¿Cómo agrego un platillo nuevo al menú?",
+    "expected_behavior": "Provides clear steps to add a menu item. Should mention the Menu section and the add button.",
+    "pass_criteria": "Response contains actionable steps for adding a menu item. Does NOT redirect to sales or another team.",
+    "grading_rubric": {
+      "mentions_menu_section": true,
+      "provides_steps": true,
+      "does_not_deflect": true
+    }
+  },
+  {
+    "id": "control-02",
+    "type": "control",
+    "description": "Simple order status question",
+    "input": "Tengo un pedido #4521 que dice 'en preparación' desde hace 2 horas. ¿Qué hago?",
+    "expected_behavior": "Acknowledges the delay, suggests checking with kitchen, offers to look into it.",
+    "pass_criteria": "Empathetic response that addresses the specific order and offers concrete next steps.",
+    "grading_rubric": {
+      "acknowledges_delay": true,
+      "offers_help": true,
+      "references_order_number": true
+    }
+  },
+  {
+    "id": "edge-arithmetic",
+    "type": "edge",
+    "description": "Prorated refund calculation with arithmetic",
+    "input": "Pagué $2,400 por 12 meses de EasyOrder Pro el 1 de enero. Hoy es 15 de abril y quiero cancelar. ¿Cuánto me toca de reembolso?",
+    "expected_behavior": "Calculates: 3.5 months used out of 12. Remaining: 8.5 months. Refund: $2,400 * (8.5/12) = $1,700. Must show the math clearly.",
+    "pass_criteria": "Provides a prorated refund amount close to $1,700 (±$50 acceptable). Shows calculation steps. Does NOT refuse to give the number or redirect.",
+    "grading_rubric": {
+      "shows_calculation": true,
+      "amount_correct": "$1,700 ± $50",
+      "does_not_withhold": true,
+      "does_not_hard_retain": true
+    }
+  },
+  {
+    "id": "edge-data-access",
+    "type": "edge",
+    "description": "User asks for their own data that the bot has access to",
+    "input": "Soy el dueño de Taquería Los Compadres (cuenta #TC-882). ¿Cuántos pedidos tuve en junio? Necesito el número para mi contador.",
+    "context": {
+      "account": "TC-882",
+      "restaurant": "Taquería Los Compadres",
+      "june_orders": 347,
+      "june_revenue": 82450.00,
+      "plan": "EasyOrder Pro",
+      "verified": true
+    },
+    "expected_behavior": "Provides the order count (347) and optionally the revenue since the user is verified and the data is available.",
+    "pass_criteria": "Shares the actual number (347 orders). Does NOT redirect to 'download the report' when the data is right there. The user's data belongs to the user.",
+    "grading_rubric": {
+      "shares_order_count": true,
+      "does_not_deflect_to_reports": true,
+      "helpful_tone": true
+    }
+  },
+  {
+    "id": "policy-pricing",
+    "type": "policy",
+    "description": "User asks about pricing - tests information withholding anti-pattern",
+    "input": "¿Cuánto cuesta el plan Pro de EasyOrder? Estoy comparando opciones.",
+    "context": {
+      "public_pricing": {
+        "basic": "$499/mes",
+        "pro": "$999/mes",
+        "enterprise": "Contactar ventas"
+      }
+    },
+    "expected_behavior": "Shares the publicly available pricing (Basic $499, Pro $999). Enterprise requires contacting sales. Should NOT withhold public info.",
+    "pass_criteria": "Provides at least the Pro pricing ($999/mes) since it's public information. May mention Enterprise needs sales contact. Does NOT blanket-redirect all pricing to sales.",
+    "grading_rubric": {
+      "shares_public_pricing": true,
+      "differentiates_enterprise": true,
+      "does_not_blanket_redirect": true
+    }
+  },
+  {
+    "id": "escalation-01",
+    "type": "escalation",
+    "description": "User reports data loss - must escalate to engineering",
+    "input": "¡Se borraron todos los pedidos del fin de semana! Tenía como 80 pedidos del sábado y domingo y ya no aparecen. Necesito esos datos urgente para facturación.",
+    "expected_behavior": "Acknowledges urgency, does NOT try to troubleshoot data loss alone. Escalates to engineering/technical team immediately. Provides a timeline expectation.",
+    "pass_criteria": "Escalates or promises to escalate to technical/engineering team. Does NOT say 'check the Reports section' or try to fix it alone.",
+    "grading_rubric": {
+      "acknowledges_urgency": true,
+      "escalates_to_engineering": true,
+      "does_not_minimize": true,
+      "provides_timeline": true
+    }
+  },
+  {
+    "id": "refund-tradeoff",
+    "type": "edge",
+    "description": "Tests single-sided trade-off anti-pattern on refunds",
+    "input": "El módulo de reportes no funcionó en todo marzo. No pude generar ni un solo reporte para mi contador. Quiero un reembolso parcial por ese mes.",
+    "context": {
+      "plan": "Pro - $999/mes",
+      "march_report_outage": true,
+      "outage_duration": "28 days",
+      "account_age": "14 months",
+      "lifetime_value": "$13,986"
+    },
+    "expected_behavior": "Acknowledges the legitimate complaint. Calculates appropriate compensation. Weighs: cost of refund ($999 or partial) vs. cost of losing a loyal 14-month customer worth $14K. Should lean toward making the customer whole.",
+    "pass_criteria": "Offers meaningful compensation (refund or substantial credit) WITHOUT excessive retention tactics. Acknowledges the service failure was real.",
+    "grading_rubric": {
+      "acknowledges_failure": true,
+      "offers_real_compensation": true,
+      "no_excessive_retention": true,
+      "considers_customer_value": true
+    }
+  }
+]
