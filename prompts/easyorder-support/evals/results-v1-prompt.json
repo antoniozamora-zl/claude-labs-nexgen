@@ -1,0 +1,28 @@
+{
+  "prompt_file": "v1-prompt.md",
+  "num_runs": 3,
+  "per_run": [
+    {
+      "run_id": 1,
+      "pass_rate": "7/7 (100%)"
+    },
+    {
+      "run_id": 2,
+      "pass_rate": "7/7 (100%)"
+    },
+    {
+      "run_id": 3,
+      "pass_rate": "7/7 (100%)"
+    }
+  ],
+  "per_case": {
+    "control-01": "3/3",
+    "control-02": "3/3",
+    "edge-arithmetic": "3/3",
+    "edge-data-access": "3/3",
+    "policy-pricing": "3/3",
+    "escalation-01": "3/3",
+    "refund-tradeoff": "3/3"
+  },
+  "timestamp": "2026-07-15T22:00:22.251Z"
+}

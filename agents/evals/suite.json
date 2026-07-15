@@ -1,0 +1,240 @@
+[
+  {
+    "id": "R01",
+    "type": "regression",
+    "category": "orders",
+    "description": "Consulta simple de estado de pedido",
+    "turns": [
+      {"role": "user", "content": "¿Cuál es el estado del pedido #1234?"}
+    ],
+    "expected": {
+      "calls_tool": "lookup_order",
+      "max_turns": 1,
+      "max_tokens": 500,
+      "tone": "directo, sin rodeos"
+    },
+    "evaluators": {
+      "deterministic": ["calls_correct_tool", "under_max_turns", "under_max_tokens"],
+      "llm_judge": ["tone_matches", "answers_question"]
+    }
+  },
+  {
+    "id": "R02",
+    "type": "regression",
+    "category": "inventory",
+    "description": "Checar inventario de un ingrediente",
+    "turns": [
+      {"role": "user", "content": "¿Cuántos kilos de carne para pastor tenemos?"}
+    ],
+    "expected": {
+      "calls_tool": "check_inventory",
+      "max_turns": 1,
+      "max_tokens": 400,
+      "tone": "informativo, conciso"
+    },
+    "evaluators": {
+      "deterministic": ["calls_correct_tool", "under_max_turns", "under_max_tokens"],
+      "llm_judge": ["tone_matches", "answers_question"]
+    }
+  },
+  {
+    "id": "R03",
+    "type": "regression",
+    "category": "menu",
+    "description": "Ver el menú actual",
+    "turns": [
+      {"role": "user", "content": "Muéstrame el menú completo con precios"}
+    ],
+    "expected": {
+      "calls_tool": "get_menu",
+      "max_turns": 1,
+      "max_tokens": 800,
+      "tone": "presentación limpia, tabla"
+    },
+    "evaluators": {
+      "deterministic": ["calls_correct_tool", "under_max_turns", "under_max_tokens"],
+      "llm_judge": ["uses_table_format", "answers_question"]
+    }
+  },
+  {
+    "id": "R04",
+    "type": "regression",
+    "category": "complaints",
+    "description": "Registrar queja simple",
+    "turns": [
+      {"role": "user", "content": "Un cliente se queja de que su orden #5678 llegó fría. Queja nivel medio."}
+    ],
+    "expected": {
+      "calls_tool": "log_complaint",
+      "max_turns": 1,
+      "max_tokens": 600,
+      "offers_compensation": true,
+      "tone": "empático pero resolutivo"
+    },
+    "evaluators": {
+      "deterministic": ["calls_correct_tool", "under_max_turns", "under_max_tokens"],
+      "llm_judge": ["tone_matches", "offers_appropriate_compensation"]
+    }
+  },
+  {
+    "id": "R05",
+    "type": "regression",
+    "category": "schedule",
+    "description": "Consultar horario de un empleado",
+    "turns": [
+      {"role": "user", "content": "¿Cuál es el horario de Juan Pérez esta semana?"}
+    ],
+    "expected": {
+      "calls_tool": "get_employee_schedule",
+      "max_turns": 1,
+      "max_tokens": 500,
+      "tone": "directo"
+    },
+    "evaluators": {
+      "deterministic": ["calls_correct_tool", "under_max_turns", "under_max_tokens"],
+      "llm_judge": ["answers_question"]
+    }
+  },
+  {
+    "id": "F01",
+    "type": "failure",
+    "category": "arithmetic",
+    "description": "Cálculo de nómina con overtime y prima dominical",
+    "turns": [
+      {"role": "user", "content": "María trabajó 54 horas esta semana incluyendo el domingo completo (8 horas). Su salario es $2,400/semana (48 hrs). Calcula su pago total."},
+      {"role": "assistant_context", "content": "Regular: 48hrs a $50/hr = $2,400. Overtime: 6hrs a $100/hr (200%) = $600. Prima dominical: 8hrs * $50 * 25% = $100. Total: $3,100."}
+    ],
+    "expected": {
+      "correct_total": 3100,
+      "shows_breakdown": true,
+      "max_tokens": 1000,
+      "applies_labor_law": true
+    },
+    "evaluators": {
+      "deterministic": ["arithmetic_correct", "under_max_tokens"],
+      "llm_judge": ["shows_work", "cites_labor_law"]
+    }
+  },
+  {
+    "id": "F02",
+    "type": "failure",
+    "category": "arithmetic",
+    "description": "Costeo de platillo con factor de merma",
+    "turns": [
+      {"role": "user", "content": "Calcula el costo del pozole rojo. Receta: 2kg carne de cerdo ($120/kg, merma 12%), 500g maíz pozolero ($45/kg, merma 5%), 200g chile guajillo ($180/kg, merma 8%). ¿Cuánto debería cobrarlo si quiero 30% de food cost?"}
+    ],
+    "expected": {
+      "meat_cost": "2 * 120 / (1-0.12) = $272.73",
+      "corn_cost": "0.5 * 45 / (1-0.05) = $23.68",
+      "chile_cost": "0.2 * 180 / (1-0.08) = $39.13",
+      "total_cost": 335.54,
+      "suggested_price": "335.54 / 0.30 = $1,118 → ajustar a ~$1,119 o $1,099",
+      "max_tokens": 1200
+    },
+    "evaluators": {
+      "deterministic": ["arithmetic_correct", "includes_waste_factor", "under_max_tokens"],
+      "llm_judge": ["shows_work", "applies_pricing_psychology"]
+    }
+  },
+  {
+    "id": "F03",
+    "type": "failure",
+    "category": "escalation",
+    "description": "Queja de seguridad alimentaria - debe escalar, no resolver",
+    "turns": [
+      {"role": "user", "content": "Un cliente encontró un pedazo de vidrio en su ensalada del pedido #9999. Dice que se cortó la boca."}
+    ],
+    "expected": {
+      "severity": "critical",
+      "escalates": true,
+      "does_not_resolve_alone": true,
+      "mentions_cofepris": true,
+      "offers_full_refund": true,
+      "max_tokens": 600
+    },
+    "evaluators": {
+      "deterministic": ["escalates_correctly", "under_max_tokens"],
+      "llm_judge": ["appropriate_severity", "does_not_admit_fault", "mentions_health_authority"]
+    }
+  },
+  {
+    "id": "F04",
+    "type": "failure",
+    "category": "context_overflow",
+    "description": "Reporte financiero mensual - no debe traer todos los datos a contexto",
+    "turns": [
+      {"role": "user", "content": "Dame el reporte de ingresos de junio desglosado por semana, con food cost y labor cost de cada semana."}
+    ],
+    "expected": {
+      "calls_tool": "generate_revenue_report",
+      "does_not_search_all_orders": true,
+      "uses_report_tool_not_search": true,
+      "max_tokens": 1500,
+      "max_tool_calls": 3
+    },
+    "evaluators": {
+      "deterministic": ["calls_correct_tool", "under_max_tokens", "efficient_tool_usage"],
+      "llm_judge": ["well_structured_report"]
+    }
+  },
+  {
+    "id": "F05",
+    "type": "failure",
+    "category": "multi_domain",
+    "description": "Pregunta que cruza dominios: inventario + menú + finanzas",
+    "turns": [
+      {"role": "user", "content": "El aguacate subió a $80/kg. ¿Qué platillos del menú usan aguacate, cuánto sube el costo de cada uno, y debería subir los precios?"},
+      {"role": "assistant_context", "content": "Requiere: get_menu para ver platillos, calculate_dish_cost para cada uno con aguacate, y análisis de margen. El agente debe orquestar esto, no delegar a 3 subagentes separados."}
+    ],
+    "expected": {
+      "calls_tools": ["get_menu", "calculate_dish_cost"],
+      "synthesizes_across_domains": true,
+      "gives_actionable_recommendation": true,
+      "max_tokens": 2000,
+      "max_tool_calls": 5
+    },
+    "evaluators": {
+      "deterministic": ["calls_correct_tools", "under_max_tokens", "efficient_tool_usage"],
+      "llm_judge": ["synthesizes_analysis", "actionable_recommendation"]
+    }
+  },
+  {
+    "id": "F06",
+    "type": "failure",
+    "category": "policy_conflict",
+    "description": "Conflicto entre retención y hacer lo correcto",
+    "turns": [
+      {"role": "user", "content": "Llevo 3 años con EasyOrder pero el módulo de inventario falló todo el mes. Perdí $15,000 en ingredientes echados a perder porque no me alertó. Quiero que me compensen."}
+    ],
+    "expected": {
+      "acknowledges_failure": true,
+      "calculates_fair_compensation": true,
+      "does_not_minimize": true,
+      "escalates_if_needed": true,
+      "max_tokens": 800
+    },
+    "evaluators": {
+      "deterministic": ["under_max_tokens"],
+      "llm_judge": ["empathetic_response", "fair_compensation", "no_deflection"]
+    }
+  },
+  {
+    "id": "F07",
+    "type": "failure",
+    "category": "subagent_waste",
+    "description": "Tarea simple que NO debería ir a subagente",
+    "turns": [
+      {"role": "user", "content": "¿Cuánto es el 16% de IVA sobre $5,280?"}
+    ],
+    "expected": {
+      "answer": "$844.80 de IVA, total $6,124.80",
+      "does_not_use_subagent": true,
+      "max_turns": 1,
+      "max_tokens": 200
+    },
+    "evaluators": {
+      "deterministic": ["arithmetic_correct", "no_subagent_call", "under_max_turns", "under_max_tokens"],
+      "llm_judge": ["concise_answer"]
+    }
+  }
+]

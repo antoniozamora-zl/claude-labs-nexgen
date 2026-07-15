@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wireframe - Export Reports | EasyOrder</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #f5f5f5; color: #1a1a1a; padding: 2rem; }
+    .spec-note { background: #fffbe6; border-left: 4px solid #faad14; padding: 12px 16px; margin-bottom: 2rem; font-size: 14px; border-radius: 4px; }
+    .spec-note strong { color: #d48806; }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    h2 { font-size: 18px; margin: 2rem 0 1rem; color: #555; border-bottom: 1px solid #ddd; padding-bottom: 8px; }
+    h3 { font-size: 15px; margin: 1.5rem 0 0.5rem; color: #333; }
+
+    .screen { background: #fff; border-radius: 12px; border: 1px solid #e0e0e0; padding: 24px; margin-bottom: 2rem; max-width: 900px; }
+    .screen-title { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 16px; }
+
+    /* Nav mockup */
+    .nav { display: flex; gap: 12px; background: #1a1a2e; padding: 12px 20px; border-radius: 8px; margin-bottom: 24px; }
+    .nav a { color: #aaa; text-decoration: none; font-size: 14px; padding: 6px 14px; border-radius: 6px; }
+    .nav a.active { background: #e94560; color: #fff; }
+
+    /* Filters */
+    .filters { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 24px; }
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    .field label { font-size: 13px; color: #666; font-weight: 500; }
+    .field input, .field select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+    .btn { padding: 8px 20px; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; font-weight: 500; }
+    .btn-primary { background: #e94560; color: #fff; }
+    .btn-secondary { background: #f0f0f0; color: #333; border: 1px solid #ddd; }
+    .btn-download { background: #16213e; color: #fff; display: flex; align-items: center; gap: 6px; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Data table */
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th { text-align: left; padding: 10px 12px; background: #f8f9fa; border-bottom: 2px solid #e0e0e0; font-weight: 600; color: #555; }
+    td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; }
+    tr:hover td { background: #fafafa; }
+
+    /* Summary cards */
+    .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .summary-card { background: #f8f9fa; border-radius: 8px; padding: 16px; }
+    .summary-card .label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+    .summary-card .value { font-size: 24px; font-weight: 600; margin-top: 4px; }
+
+    /* Empty state */
+    .empty-state { text-align: center; padding: 60px 20px; color: #999; }
+    .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+    .empty-state p { font-size: 15px; }
+
+    /* States */
+    .state-label { display: inline-block; font-size: 11px; background: #e8f4fd; color: #1890ff; padding: 2px 8px; border-radius: 4px; margin-left: 8px; }
+
+    /* PDF preview */
+    .pdf-preview { border: 2px dashed #ddd; border-radius: 8px; padding: 24px; margin: 16px 0; background: #fafafa; }
+    .pdf-header { border-bottom: 2px solid #e94560; padding-bottom: 12px; margin-bottom: 16px; }
+    .pdf-header .restaurant-name { font-size: 20px; font-weight: 700; }
+    .pdf-header .restaurant-info { font-size: 12px; color: #666; }
+
+    .flow-list { list-style: none; counter-reset: flow; }
+    .flow-list li { counter-increment: flow; padding: 8px 0; font-size: 14px; }
+    .flow-list li::before { content: counter(flow) "."; font-weight: 700; color: #e94560; margin-right: 8px; }
+  </style>
+</head>
+<body>
+
+<h1>EasyOrder - Modulo de Exportacion de Reportes</h1>
+<div class="spec-note">
+  <strong>SPEC DOCUMENT</strong> — Este wireframe es la especificacion visual del modulo.
+  La implementacion debe seguir estos layouts, estados y flujos exactamente.<br>
+  <strong>Stack:</strong> React 19 + Tailwind CSS + pdfmake + react-router-dom v6<br>
+  <strong>Fecha formato:</strong> DD/MM/YYYY (Mexico)<br>
+  <strong>Permisos:</strong> Todos los usuarios<br>
+  <strong>Branding PDF:</strong> Logo + nombre + direccion del restaurante
+</div>
+
+<!-- ============================================ -->
+<h2>1. Navegacion principal</h2>
+<!-- ============================================ -->
+<div class="screen">
+  <p class="screen-title">Sidebar / Top nav</p>
+  <div class="nav">
+    <a href="#">Dashboard</a>
+    <a href="#">Ordenes</a>
+    <a href="#">Menu</a>
+    <a href="#" class="active">Reportes</a>
+    <a href="#">Ajustes</a>
+  </div>
+  <p style="font-size:13px; color:#888; margin-top:8px;">
+    La seccion "Reportes" es una nueva ruta: <code>/reportes</code>.
+    Desde aqui se accede al filtro, preview y descarga.
+  </p>
+</div>
+
+<!-- ============================================ -->
+<h2>2. Pantalla principal: Filtros + Preview</h2>
+<!-- ============================================ -->
+<div class="screen">
+  <p class="screen-title">Estado: Con datos</p>
+
+  <h3>Filtros</h3>
+  <div class="filters">
+    <div class="field">
+      <label>Tipo de reporte</label>
+      <select>
+        <option>Ordenes</option>
+        <option>Ventas</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Fecha inicio</label>
+      <input type="date" value="2026-07-01">
+    </div>
+    <div class="field">
+      <label>Fecha fin</label>
+      <input type="date" value="2026-07-14">
+    </div>
+    <button class="btn btn-primary">Generar preview</button>
+  </div>
+
+  <h3>Resumen</h3>
+  <div class="summary">
+    <div class="summary-card">
+      <div class="label">Total ordenes</div>
+      <div class="value">147</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">Ingreso total</div>
+      <div class="value">$45,230</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">Ticket promedio</div>
+      <div class="value">$307.69</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">Periodo</div>
+      <div class="value" style="font-size:16px;">01/07/2026 - 14/07/2026</div>
+    </div>
+  </div>
+
+  <h3>Preview de datos <span class="state-label">Reporte: Ordenes</span></h3>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Fecha</th>
+        <th>Cliente</th>
+        <th>Items</th>
+        <th>Total</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>001</td><td>14/07/2026</td><td>Mesa 5</td><td>3</td><td>$485.00</td><td>Completada</td></tr>
+      <tr><td>002</td><td>14/07/2026</td><td>Mesa 2</td><td>1</td><td>$120.00</td><td>Completada</td></tr>
+      <tr><td>003</td><td>13/07/2026</td><td>Mesa 8</td><td>5</td><td>$890.00</td><td>Completada</td></tr>
+      <tr><td>004</td><td>13/07/2026</td><td>Para llevar</td><td>2</td><td>$245.00</td><td>Completada</td></tr>
+      <tr><td>005</td><td>12/07/2026</td><td>Mesa 1</td><td>4</td><td>$610.00</td><td>Cancelada</td></tr>
+    </tbody>
+  </table>
+
+  <div style="display:flex; justify-content:flex-end; margin-top:16px; gap:12px;">
+    <button class="btn btn-download">Descargar PDF</button>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<h2>3. Estado vacio (sin datos en rango)</h2>
+<!-- ============================================ -->
+<div class="screen">
+  <p class="screen-title">Estado: Sin datos</p>
+  <div class="filters">
+    <div class="field">
+      <label>Tipo de reporte</label>
+      <select><option>Ordenes</option></select>
+    </div>
+    <div class="field">
+      <label>Fecha inicio</label>
+      <input type="date" value="2026-01-01">
+    </div>
+    <div class="field">
+      <label>Fecha fin</label>
+      <input type="date" value="2026-01-31">
+    </div>
+    <button class="btn btn-primary">Generar preview</button>
+  </div>
+  <div class="empty-state">
+    <div class="icon">&#128203;</div>
+    <p><strong>No hay datos para este rango</strong></p>
+    <p style="font-size:13px; margin-top:4px;">Selecciona un periodo diferente para generar el reporte.</p>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<h2>4. Estructura del PDF generado</h2>
+<!-- ============================================ -->
+<div class="screen">
+  <p class="screen-title">Preview de PDF</p>
+  <div class="pdf-preview">
+    <div class="pdf-header">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div style="width:50px; height:50px; background:#e94560; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:18px;">EO</div>
+        <div>
+          <div class="restaurant-name">Mi Restaurante</div>
+          <div class="restaurant-info">Av. Reforma 123, Col. Centro, CDMX | Tel: 55-1234-5678</div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:14px; margin-bottom:12px;">
+      <strong>Reporte de Ordenes</strong><br>
+      <span style="color:#666;">Periodo: 01/07/2026 - 14/07/2026</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="background:#e94560; color:#fff;">#</th>
+          <th style="background:#e94560; color:#fff;">Fecha</th>
+          <th style="background:#e94560; color:#fff;">Cliente</th>
+          <th style="background:#e94560; color:#fff;">Items</th>
+          <th style="background:#e94560; color:#fff;">Total</th>
+          <th style="background:#e94560; color:#fff;">Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>001</td><td>14/07/2026</td><td>Mesa 5</td><td>3</td><td>$485.00</td><td>Completada</td></tr>
+        <tr><td>002</td><td>14/07/2026</td><td>Mesa 2</td><td>1</td><td>$120.00</td><td>Completada</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:16px; padding-top:12px; border-top:1px solid #ddd; font-size:13px; color:#888;">
+      <div style="display:flex; justify-content:space-between;">
+        <span>Total ordenes: 147</span>
+        <span>Ingreso total: $45,230.00</span>
+        <span>Ticket promedio: $307.69</span>
+      </div>
+      <div style="text-align:center; margin-top:12px; font-size:11px;">
+        Generado el 14/07/2026 por EasyOrder
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<h2>5. Flujo de usuario</h2>
+<!-- ============================================ -->
+<div class="screen">
+  <p class="screen-title">User flow</p>
+  <ol class="flow-list">
+    <li>Usuario navega a <code>/reportes</code> desde la barra de navegacion</li>
+    <li>Selecciona tipo de reporte (Ordenes o Ventas)</li>
+    <li>Selecciona rango de fechas (inicio y fin)</li>
+    <li>Click en "Generar preview" — se muestra tabla con datos y tarjetas de resumen</li>
+    <li>Si no hay datos: empty state con mensaje, sin boton de descarga</li>
+    <li>Si hay datos: click en "Descargar PDF" — se genera y descarga el archivo</li>
+    <li>Mientras genera: boton muestra estado de carga "Generando..."</li>
+    <li>PDF descargado incluye header con branding, tabla de datos y resumen</li>
+  </ol>
+</div>
+
+<!-- ============================================ -->
+<h2>6. Componentes requeridos</h2>
+<!-- ============================================ -->
+<div class="screen">
+  <p class="screen-title">Arquitectura de componentes</p>
+  <ul style="font-size:14px; line-height:2;">
+    <li><code>src/pages/ReportsPage.jsx</code> — Pagina principal con filtros y preview</li>
+    <li><code>src/components/ReportFilters.jsx</code> — Filtros: tipo, fecha inicio, fecha fin</li>
+    <li><code>src/components/ReportSummary.jsx</code> — Tarjetas de resumen (total, ingreso, promedio)</li>
+    <li><code>src/components/ReportTable.jsx</code> — Tabla de preview con datos</li>
+    <li><code>src/components/EmptyState.jsx</code> — Estado vacio reutilizable</li>
+    <li><code>src/services/pdfGenerator.js</code> — Logica de generacion de PDF con pdfmake</li>
+    <li><code>src/data/mockData.js</code> — Datos mock de ordenes y ventas</li>
+    <li><code>src/utils/dateFormatter.js</code> — Formateo DD/MM/YYYY</li>
+  </ul>
+</div>
+
+</body>
+</html>
