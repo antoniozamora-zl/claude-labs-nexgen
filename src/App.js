@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import ReportsPage from './pages/ReportsPage';
+import MetricsPage from './pages/MetricsPage';
 
 function Placeholder({ title }) {
   return (
@@ -17,7 +18,7 @@ function App() {
         <NavBar />
         <main className="max-w-5xl mx-auto p-6">
           <Routes>
-            <Route path="/" element={<Placeholder title="Dashboard" />} />
+            <Route path="/" element={<MetricsPage />} />
             <Route path="/ordenes" element={<Placeholder title="Ordenes" />} />
             <Route path="/menu" element={<Placeholder title="Menu" />} />
             <Route path="/reportes" element={<ReportsPage />} />

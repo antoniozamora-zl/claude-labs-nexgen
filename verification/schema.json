@@ -1,0 +1,70 @@
+{
+  "description": "MetricsDashboard component contract schema — published as data-* attributes in the DOM",
+  "root": {
+    "selector": "[data-verify='metrics-dashboard']",
+    "attributes": {
+      "data-verify": "String — always 'metrics-dashboard'",
+      "data-empty": "Boolean — true if result set is empty, else absent",
+      "data-loading": "Boolean — true while fetching data, else absent"
+    }
+  },
+  "metrics": [
+    {
+      "name": "total",
+      "selector": "[data-metric='total']",
+      "type": "Number",
+      "description": "Total count of reports in range",
+      "attribute": "data-value",
+      "example": "287"
+    },
+    {
+      "name": "approval-rate",
+      "selector": "[data-metric='approval-rate']",
+      "type": "Number (percent 0–100)",
+      "description": "Percentage of approved / total",
+      "attribute": "data-value",
+      "example": "64"
+    },
+    {
+      "name": "status-breakdown",
+      "selector": "[data-metric='status-breakdown']",
+      "type": "Object with three integers",
+      "description": "Count by status: approved, pending, rejected",
+      "attributes": {
+        "data-approved": "Integer",
+        "data-pending": "Integer",
+        "data-rejected": "Integer"
+      },
+      "example": {
+        "data-approved": "184",
+        "data-pending": "72",
+        "data-rejected": "31"
+      }
+    },
+    {
+      "name": "avg-review-time",
+      "selector": "[data-metric='avg-review-time']",
+      "type": "Number (days, 2 decimals)",
+      "description": "Average days from creation to approval",
+      "attribute": "data-value",
+      "example": "5.2"
+    },
+    {
+      "name": "daily-trend",
+      "selector": "[data-metric='daily-trend']",
+      "type": "Array of {date, count}",
+      "description": "Reports per day for last 14 days (for charting)",
+      "attribute": "data-json",
+      "example": "[{\"date\":\"2026-07-15\",\"count\":12},{\"date\":\"2026-07-14\",\"count\":8}]"
+    }
+  ],
+  "export": {
+    "selector": "[data-action='export-csv']",
+    "type": "Button",
+    "description": "Export button must be always available (clickable even with 0 rows → empty CSV)",
+    "attributes": {
+      "data-action": "String — always 'export-csv'",
+      "disabled": "Boolean — false always"
+    }
+  }
+}

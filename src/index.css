@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import "./tailwind.output.css";
 
 body {
   margin: 0;

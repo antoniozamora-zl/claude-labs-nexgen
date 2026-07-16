@@ -1,0 +1,58 @@
+import { useState } from 'react';
+import { validateDateRange } from '../utils/dateValidation';
+
+export default function MetricsFilters({ onGenerate }) {
+  const today = new Date();
+  const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+  const [startDate, setStartDate] = useState(firstOfMonth.toISOString().split('T')[0]);
+  const [endDate, setEndDate] = useState(today.toISOString().split('T')[0]);
+  const [error, setError] = useState(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const validation = validateDateRange(startDate, endDate);
+    if (!validation.valid) {
+      setError(validation.error);
+      return;
+    }
+    setError(null);
+    onGenerate({ startDate, endDate });
+  };
+
+  return (
+    <div className="mb-6">
+      <form onSubmit={handleSubmit} className="flex flex-wrap items-end gap-4">
+        <div className="flex flex-col gap-1">
+          <label className="text-sm text-gray-500 font-medium">Fecha inicio</label>
+          <input
+            type="date"
+            value={startDate}
+            onChange={(e) => { setStartDate(e.target.value); setError(null); }}
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-sm text-gray-500 font-medium">Fecha fin</label>
+          <input
+            type="date"
+            value={endDate}
+            onChange={(e) => { setEndDate(e.target.value); setError(null); }}
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+          />
+        </div>
+        <button
+          type="submit"
+          className="px-5 py-2 bg-[#e94560] text-white rounded-lg text-sm font-medium hover:bg-[#d63850] transition-colors"
+        >
+          Cargar métricas
+        </button>
+      </form>
+      {error && (
+        <div className="mt-2 text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg">
+          {error}
+        </div>
+      )}
+    </div>
+  );
+}

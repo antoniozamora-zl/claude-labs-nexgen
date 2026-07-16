@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Metrics Dashboard Spec — Dirección A vs B</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f5f5f5;
+      color: #1a1a1a;
+      line-height: 1.6;
+      padding: 20px;
+    }
+    .container { max-width: 1400px; margin: 0 auto; }
+    h1 { margin-bottom: 8px; font-size: 28px; }
+    .spec-meta { font-size: 13px; color: #666; margin-bottom: 30px; }
+    .directions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+    .direction {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .direction h2 {
+      font-size: 18px;
+      margin-bottom: 4px;
+      color: #222;
+    }
+    .direction-desc {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .mockup {
+      background: #fafafa;
+      border: 1px dashed #ddd;
+      border-radius: 6px;
+      padding: 16px;
+      margin-bottom: 16px;
+      font-family: "Monaco", monospace;
+      font-size: 12px;
+      overflow-x: auto;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .metric-card {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 12px;
+      text-align: center;
+    }
+    .metric-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #0066cc;
+    }
+    .metric-label {
+      font-size: 11px;
+      color: #666;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .row { display: flex; gap: 12px; width: 100%; }
+    .col { flex: 1; }
+    .chart-placeholder {
+      background: linear-gradient(135deg, #f0f0f0 25%, #fafafa 25%, #fafafa 50%, #f0f0f0 50%, #f0f0f0 75%, #fafafa 75%);
+      background-size: 12px 12px;
+      border-radius: 4px;
+      height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 12px;
+    }
+    .controls {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-size: 12px;
+    }
+    .controls button {
+      background: #0066cc;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .controls button:hover { background: #0052a3; }
+    .pros, .cons {
+      margin-top: 16px;
+      font-size: 12px;
+    }
+    .pros { color: #166534; }
+    .cons { color: #991b1b; }
+    .pros strong, .cons strong { display: block; margin-bottom: 4px; text-transform: uppercase; font-size: 11px; }
+    .pros ul, .cons ul { margin-left: 16px; margin-top: 4px; }
+    .pros li, .cons li { margin-bottom: 2px; }
+    .decision {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 6px;
+      padding: 16px;
+      margin-top: 40px;
+    }
+    .decision h3 { margin-bottom: 8px; font-size: 14px; }
+    .decision p { font-size: 13px; line-height: 1.6; }
+    .contract {
+      background: #e3f2fd;
+      border-left: 4px solid #1976d2;
+      padding: 12px;
+      border-radius: 4px;
+      margin-top: 16px;
+      font-size: 12px;
+      font-family: monospace;
+    }
+    .contract strong { display: block; margin-bottom: 4px; }
+    @media (max-width: 1000px) {
+      .directions { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📊 Metrics Dashboard Specification</h1>
+    <div class="spec-meta">
+      Feature: Dashboard con visualización + export | Audiencia: Analistas de datos | Estado: spec (antes de implementar)
+    </div>
+
+    <div class="directions">
+      <!-- DIRECCIÓN A: Grid Compacta + Export Directa -->
+      <div class="direction">
+        <h2>Dirección A: Grid Compacta + Export</h2>
+        <div class="direction-desc">
+          KPIs en tarjetas (4 arriba), gráfico de tendencias abajo, botón export prominente. Minimalista, directo, datos en primer plano.
+        </div>
+
+        <div class="mockup">
+          <div class="controls">
+            📅 Date Range: [From] [To]
+            <button>Apply</button>
+            <button style="background: #28a745; margin-left: 8px;">⬇️ Export CSV</button>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <div class="metric-card">
+                <div class="metric-value">287</div>
+                <div class="metric-label">Total Reports</div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="metric-card">
+                <div class="metric-value">64%</div>
+                <div class="metric-label">Approval Rate</div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="metric-card">
+                <div class="metric-value">184</div>
+                <div class="metric-label">Approved</div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="metric-card">
+                <div class="metric-value">5.2d</div>
+                <div class="metric-label">Avg Review Time</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <div class="metric-card">
+                <div class="metric-value">72</div>
+                <div class="metric-label">Pending</div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="metric-card">
+                <div class="metric-value">31</div>
+                <div class="metric-label">Rejected</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 12px;">
+            <strong style="font-size: 11px; color: #666;">Daily Trend (last 14 days)</strong>
+            <div class="chart-placeholder">📈 Line Chart: Reports per day</div>
+          </div>
+        </div>
+
+        <div class="pros">
+          <strong>✓ Pros</strong>
+          <ul>
+            <li>Escaneo rápido de KPIs (4 números en la línea de flotación)</li>
+            <li>Export siempre visible, no requiere scroll</li>
+            <li>Fácil de implementar, componentes reutilizables</li>
+            <li>Responsive en mobile (tarjetas apiladas)</li>
+          </ul>
+        </div>
+
+        <div class="cons">
+          <strong>✗ Cons</strong>
+          <ul>
+            <li>Gráfico secundario, pequeño (visual no es el foco)</li>
+            <li>Tendencias no son tan obvias sin múltiples gráficos</li>
+            <li>Menos espacio para comparativas (ej: semana a semana)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- DIRECCIÓN B: Tabs + Multi-Chart -->
+      <div class="direction">
+        <h2>Dirección B: Tabs con Gráficos Grandes</h2>
+        <div class="direction-desc">
+          Tres tabs: Summary (KPIs), Trends (gráficos grandes), Details (tabla). Más espacio para visualización, mejor para exploración.
+        </div>
+
+        <div class="mockup">
+          <div class="controls">
+            📅 [From] [To] <button>Apply</button> |
+            <button style="background: #28a745;">⬇️ Export filtered data</button>
+          </div>
+
+          <div style="border-bottom: 1px solid #ddd; margin: 8px 0; padding-bottom: 8px;">
+            <span style="padding: 4px 8px; border-bottom: 2px solid #0066cc; color: #0066cc; font-size: 12px; font-weight: 500; cursor: pointer;">Summary</span>
+            <span style="padding: 4px 8px; color: #999; font-size: 12px; cursor: pointer;">Trends</span>
+            <span style="padding: 4px 8px; color: #999; font-size: 12px; cursor: pointer;">Details</span>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <div class="metric-card">
+                <div class="metric-value">287</div>
+                <div class="metric-label">Total</div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="metric-card">
+                <div class="metric-value">184</div>
+                <div class="metric-label">Approved</div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="metric-card">
+                <div class="metric-value">72</div>
+                <div class="metric-label">Pending</div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="metric-card">
+                <div class="metric-value">31</div>
+                <div class="metric-label">Rejected</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="metric-card" style="margin-top: 12px; text-align: left;">
+            <div style="font-size: 11px; color: #666; text-transform: uppercase; margin-bottom: 4px;">Trends Tab</div>
+            <div class="chart-placeholder" style="height: 200px;">📈 Large Line Chart: Daily volume</div>
+            <div class="chart-placeholder" style="margin-top: 12px; height: 150px;">📊 Bar Chart: Status breakdown by week</div>
+          </div>
+        </div>
+
+        <div class="pros">
+          <strong>✓ Pros</strong>
+          <ul>
+            <li>Gráficos grandes, exploración visual profunda</li>
+            <li>Separa concerns (summary / trends / details)</li>
+            <li>Escalable a más gráficos sin cluttering</li>
+            <li>Professional para dashboards de BI</li>
+          </ul>
+        </div>
+
+        <div class="cons">
+          <strong>✗ Cons</strong>
+          <ul>
+            <li>Requiere 2 clicks para ver trends (menos inmediato)</li>
+            <li>Más componentes complejos (tabs, estado)</li>
+            <li>Export button podría quedar oculta en scroll</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- DECISIÓN Y CONTRATO -->
+    <div class="decision">
+      <h3>🎯 Recomendación + Contrato en el DOM</h3>
+      <p>
+        <strong>Elegir: Dirección A (Grid Compacta)</strong><br>
+        <em>Por qué:</em> Los analistas necesitan exportar datos (la acción principal), no explorar gráficos interactivos. Dirección A pone el export prominente y los KPIs en una vista sin scroll. Las tendencias son un bonus visual, no el foco. Dirección B es más hermosa pero añade complejidad (tabs, estado) que ralentiza el flujo exportador.<br><br>
+        <em>Trade-off:</em> sacrificamos gráficos grandes por velocidad de exportación y escaneo de KPIs.
+      </p>
+
+      <div class="contract">
+        <strong>🔗 Contrato en el DOM</strong>
+        Los componentes publicarán su estado como atributos <code>data-*</code>:
+        <pre style="margin-top: 4px; overflow-x: auto;">
+&lt;div data-verify="metrics-dashboard"&gt;
+  &lt;div data-metric="total" data-value="287" /&gt;
+  &lt;div data-metric="approval-rate" data-value="64" /&gt;
+  &lt;div data-metric="avg-review-time" data-value="5.2" /&gt;
+  &lt;div data-metric="status-breakdown"
+       data-approved="184"
+       data-pending="72"
+       data-rejected="31" /&gt;
+  &lt;button data-action="export-csv" /&gt;
+&lt;/div&gt;</pre>
+        <strong style="display: block; margin-top: 8px;">Invariantes:</strong>
+        <ul style="margin-left: 16px; margin-top: 4px;">
+          <li><code>total = approved + pending + rejected</code></li>
+          <li><code>approval-rate = 100 * approved / total</code></li>
+          <li><code>export-csv button es siempre clickeable</code> (incluso con 0 registros → descarga vacía)</li>
+          <li>Si result vacío: <code>data-empty="true"</code></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,192 @@
+{
+  "description": "Test probes — executable checks that verify invariants. Mix of happy path and deliberate breaks.",
+  "probes": [
+    {
+      "name": "happy-path-arithmetic",
+      "description": "Happy path: verify arithmetic on normal dataset",
+      "fixture": "happy-path",
+      "steps": [
+        "Set date range to 2026-01-01 ... 2026-07-15",
+        "Click 'Apply' (or equivalent)",
+        "Wait for metrics to load"
+      ],
+      "assertions": [
+        {
+          "selector": "[data-metric='total']",
+          "attribute": "data-value",
+          "expectedValue": "287",
+          "invariant": "arithmetic-sum"
+        },
+        {
+          "selector": "[data-metric='status-breakdown']",
+          "attribute": "data-approved",
+          "expectedValue": "184",
+          "invariant": "arithmetic-sum"
+        },
+        {
+          "selector": "[data-metric='status-breakdown']",
+          "attribute": "data-pending",
+          "expectedValue": "72",
+          "invariant": "arithmetic-sum"
+        },
+        {
+          "selector": "[data-metric='status-breakdown']",
+          "attribute": "data-rejected",
+          "expectedValue": "31",
+          "invariant": "arithmetic-sum"
+        },
+        {
+          "calculation": "184 + 72 + 31",
+          "expectedValue": 287,
+          "actualValue": "{approved} + {pending} + {rejected}",
+          "invariant": "arithmetic-sum"
+        }
+      ],
+      "passCriteria": "All assertions match"
+    },
+    {
+      "name": "approval-rate-formula-check",
+      "description": "Verify approval rate is calculated correctly (100 * approved / total)",
+      "fixture": "happy-path",
+      "steps": [
+        "Set date range to 2026-01-01 ... 2026-07-15",
+        "Get total, approved from DOM",
+        "Read approval-rate metric"
+      ],
+      "assertions": [
+        {
+          "calculation": "Math.round(100 * 184 / 287)",
+          "expectedValue": 64,
+          "actualValue": "[data-metric='approval-rate'] data-value",
+          "invariant": "approval-rate-formula"
+        }
+      ],
+      "passCriteria": "Calculated rate matches DOM value (within 1%)"
+    },
+    {
+      "name": "empty-result-consistency",
+      "description": "Edge case: no data in range → empty state",
+      "fixture": "empty-result",
+      "steps": [
+        "Set date range to 2099-01-01 ... 2099-12-31 (future, no data)",
+        "Click 'Apply'",
+        "Verify empty state UI"
+      ],
+      "assertions": [
+        {
+          "selector": "[data-verify='metrics-dashboard']",
+          "attribute": "data-empty",
+          "expectedValue": "true",
+          "invariant": "empty-state-consistency"
+        },
+        {
+          "selector": "[data-metric='total']",
+          "attribute": "data-value",
+          "expectedValue": "0",
+          "invariant": "arithmetic-sum"
+        },
+        {
+          "textContent": "No reports found | Empty | No data",
+          "mustAppear": true,
+          "description": "User-friendly message for empty result",
+          "invariant": "empty-state-consistency"
+        }
+      ],
+      "passCriteria": "data-empty=true and user sees clear 'no data' message"
+    },
+    {
+      "name": "export-always-clickable",
+      "description": "Export button is ALWAYS clickable, even with 0 rows",
+      "fixture": "empty-result",
+      "steps": [
+        "Set date range to future (no data)",
+        "Click 'Apply'",
+        "Verify export button state"
+      ],
+      "assertions": [
+        {
+          "selector": "[data-action='export-csv']",
+          "property": "disabled",
+          "expectedValue": false,
+          "invariant": "export-always-available"
+        },
+        {
+          "action": "Click export button",
+          "expectedOutcome": "Downloads file (even if empty)",
+          "invariant": "export-always-available"
+        }
+      ],
+      "passCriteria": "Button clickable, download proceeds with empty CSV"
+    },
+    {
+      "name": "deliberate-break-1-arithmetic-hardcoded",
+      "description": "DELIBERATE BREAK: hardcode total to wrong value, verify detection",
+      "fixture": "happy-path",
+      "setup": "Modify code: set data-value of total to '999' (wrong)",
+      "steps": [
+        "Set date range to 2026-01-01 ... 2026-07-15",
+        "Get total (999 now hardcoded)",
+        "Get approved, pending, rejected"
+      ],
+      "assertions": [
+        {
+          "calculation": "approved + pending + rejected",
+          "expectedValue": 287,
+          "actualValue": 287,
+          "domValue": 999,
+          "mismatch": "arithmetic-sum violated",
+          "invariant": "arithmetic-sum",
+          "mustFail": true
+        }
+      ],
+      "expectedOutcome": "Verification FAILS with 'arithmetic-sum violation: DOM 999 ≠ calc 287'",
+      "notes": "Tests that we catch hardcoded mistakes"
+    },
+    {
+      "name": "deliberate-break-2-contract-missing",
+      "description": "DELIBERATE BREAK: remove data-metric attribute (break contract)",
+      "fixture": "happy-path",
+      "setup": "Modify DOM: delete data-metric='approval-rate' and data-value attributes",
+      "steps": [
+        "Set date range to 2026-01-01 ... 2026-07-15",
+        "Try to read approval-rate metric"
+      ],
+      "assertions": [
+        {
+          "selector": "[data-metric='approval-rate']",
+          "shouldExist": true,
+          "actualValue": "null (not found)",
+          "invariant": "contract published",
+          "mustFail": true
+        }
+      ],
+      "expectedOutcome": "Verification FAILS with 'missing contract: data-metric=approval-rate not found'",
+      "notes": "App still renders fine (React doesn't break), but contract is broken. Catches silent failures."
+    },
+    {
+      "name": "deliberate-break-3-verification-underspecified",
+      "description": "DELIBERATE BREAK: write weak verification that passes even when wrong",
+      "fixture": "happy-path",
+      "setup": "Write bad probe: only check that total > 0 (ignores calculation errors)",
+      "steps": [
+        "Set total in DOM to 287",
+        "Set approved/pending/rejected to 50/50/50 (sum=150, not 287)",
+        "Run weak probe"
+      ],
+      "assertions": [
+        {
+          "selector": "[data-metric='total']",
+          "attribute": "data-value",
+          "check": "> 0",
+          "passes": true,
+          "butArithmeticFails": true,
+          "invariant": "arithmetic-sum",
+          "mustFail": true,
+          "note": "Probe passes but invariant is violated — bad verification"
+        }
+      ],
+      "expectedOutcome": "Probe passes (wrong!). Upgrade to proper assertion: arithmetic-sum must hold.",
+      "notes": "Teaches: 'testing' != 'verifying'. Probes must check invariants explicitly."
+    }
+  ]
+}
