@@ -1,0 +1,91 @@
+{
+  "description": "Invariants — rules that MUST always hold. Violations indicate bugs.",
+  "invariants": [
+    {
+      "id": "arithmetic-sum",
+      "rule": "total = approved + pending + rejected",
+      "description": "The total count must equal the sum of all status buckets",
+      "criticality": "CRITICAL",
+      "example": {
+        "total": 287,
+        "approved": 184,
+        "pending": 72,
+        "rejected": 31,
+        "check": "287 = 184 + 72 + 31 ✓"
+      },
+      "violation": "Component shows total=287 but approved+pending+rejected=286"
+    },
+    {
+      "id": "approval-rate-bounds",
+      "rule": "0 ≤ approval-rate ≤ 100",
+      "description": "Approval rate is always a valid percentage",
+      "criticality": "CRITICAL",
+      "example": {
+        "approvalRate": 64,
+        "check": "0 ≤ 64 ≤ 100 ✓"
+      },
+      "violation": "Component shows approval-rate=105 or -10"
+    },
+    {
+      "id": "approval-rate-formula",
+      "rule": "approval-rate = 100 * approved / total (when total > 0)",
+      "description": "Approval rate must be calculated correctly from approved and total",
+      "criticality": "CRITICAL",
+      "example": {
+        "approved": 184,
+        "total": 287,
+        "expected": 64.1,
+        "check": "100 * 184 / 287 = 64.1 ✓"
+      },
+      "violation": "Component shows approval-rate=60 when it should be 64"
+    },
+    {
+      "id": "empty-state-consistency",
+      "rule": "If total=0, then data-empty='true' (and vice versa)",
+      "description": "Empty state indicator must match the actual data count",
+      "criticality": "HIGH",
+      "example": {
+        "total": 0,
+        "dataEmpty": true,
+        "check": "Consistent ✓"
+      },
+      "violation": "total=0 but data-empty='false' (or absent)"
+    },
+    {
+      "id": "export-always-available",
+      "rule": "Export button must be enabled (not disabled) always",
+      "description": "User can export even with 0 rows (generates empty CSV)",
+      "criticality": "HIGH",
+      "example": {
+        "total": 0,
+        "exportDisabled": false,
+        "check": "Can click export ✓"
+      },
+      "violation": "Export button disabled when total=0"
+    },
+    {
+      "id": "avg-review-time-non-negative",
+      "rule": "avg-review-time ≥ 0 (or null if no approved reports)",
+      "description": "Average review time cannot be negative",
+      "criticality": "HIGH",
+      "example": {
+        "avgReviewTime": 5.2,
+        "check": "5.2 ≥ 0 ✓"
+      },
+      "violation": "avg-review-time=-2.1"
+    },
+    {
+      "id": "status-counts-non-negative",
+      "rule": "approved ≥ 0, pending ≥ 0, rejected ≥ 0",
+      "description": "Status counts are never negative",
+      "criticality": "CRITICAL",
+      "example": {
+        "approved": 184,
+        "pending": 72,
+        "rejected": 31,
+        "check": "All ≥ 0 ✓"
+      },
+      "violation": "rejected=-5"
+    }
+  ]
+}

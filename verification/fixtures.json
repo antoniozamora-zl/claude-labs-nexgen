@@ -1,0 +1,131 @@
+{
+  "description": "Test fixtures — known states for the MetricsDashboard component",
+  "fixtures": [
+    {
+      "name": "happy-path",
+      "description": "Normal case: 287 reports, 64% approval rate, ~5.2 days avg review",
+      "filters": {
+        "startDate": "2026-01-01",
+        "endDate": "2026-07-15"
+      },
+      "expectedMetrics": {
+        "total": 287,
+        "approved": 184,
+        "pending": 72,
+        "rejected": 31,
+        "approvalRate": 64,
+        "avgReviewTime": 5.2
+      },
+      "expectedDOM": {
+        "data-verify": "metrics-dashboard",
+        "data-empty": false,
+        "metrics": {
+          "total": "287",
+          "approval-rate": "64",
+          "status-breakdown": {
+            "data-approved": "184",
+            "data-pending": "72",
+            "data-rejected": "31"
+          },
+          "avg-review-time": "5.2"
+        }
+      },
+      "notes": "Real data from mock orders filtered by date range"
+    },
+    {
+      "name": "empty-result",
+      "description": "Edge case: no reports in range (future dates)",
+      "filters": {
+        "startDate": "2099-01-01",
+        "endDate": "2099-12-31"
+      },
+      "expectedMetrics": {
+        "total": 0,
+        "approved": 0,
+        "pending": 0,
+        "rejected": 0,
+        "approvalRate": null,
+        "avgReviewTime": null
+      },
+      "expectedDOM": {
+        "data-verify": "metrics-dashboard",
+        "data-empty": true,
+        "message": "No reports found in this range"
+      },
+      "notes": "Component should show empty state, not NaN or errors"
+    },
+    {
+      "name": "single-day",
+      "description": "Narrow range: 1 day only",
+      "filters": {
+        "startDate": "2026-01-15",
+        "endDate": "2026-01-15"
+      },
+      "expectedMetrics": {
+        "total": 3,
+        "approved": 2,
+        "pending": 1,
+        "rejected": 0,
+        "approvalRate": 67,
+        "avgReviewTime": 1.5
+      },
+      "expectedDOM": {
+        "data-verify": "metrics-dashboard",
+        "data-empty": false
+      },
+      "notes": "Small dataset, validates calculation correctness at small scale"
+    },
+    {
+      "name": "all-approved",
+      "description": "All reports approved (100% rate)",
+      "filters": {
+        "startDate": "2026-02-01",
+        "endDate": "2026-02-28"
+      },
+      "expectedMetrics": {
+        "approvalRate": 100,
+        "pending": 0,
+        "rejected": 0
+      },
+      "expectedDOM": {
+        "data-metric": "approval-rate",
+        "data-value": "100"
+      },
+      "notes": "Boundary case for approval rate"
+    },
+    {
+      "name": "all-pending",
+      "description": "All reports pending (0% approved, 0% rejected)",
+      "filters": {
+        "startDate": "2026-07-10",
+        "endDate": "2026-07-15"
+      },
+      "expectedMetrics": {
+        "approvalRate": 0,
+        "approved": 0,
+        "rejected": 0
+      },
+      "expectedDOM": {
+        "data-metric": "approval-rate",
+        "data-value": "0"
+      },
+      "notes": "Boundary case: fresh reports not yet reviewed"
+    },
+    {
+      "name": "large-dataset",
+      "description": "Full 7-month range — stress test (287+ records)",
+      "filters": {
+        "startDate": "2026-01-01",
+        "endDate": "2026-07-15"
+      },
+      "expectedMetrics": {
+        "total": 287
+      },
+      "performance": {
+        "renderTime": "< 100ms",
+        "memoryStable": true
+      },
+      "notes": "Validates performance with realistic volume"
+    }
+  ]
+}
